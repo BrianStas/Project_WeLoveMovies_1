@@ -21,6 +21,13 @@ function read(req, res) {
     res.json({ data });     
     }
 
+function theaterList(req, res, next){
+    moviesService
+    .theatersPlayingMovie(req.params.movieId)
+    .then((data) => res.json({data}))
+    .catch(next);
+}
+
 function movieExists(req, res, next) {
     moviesService  
       .read(req.params.movieId)  
@@ -38,6 +45,7 @@ function movieExists(req, res, next) {
 module.exports = {
 
   list,
-  read: [movieExists, read]
+  read: [movieExists, read],
+  theaterList: [movieExists, theaterList]
 
 };
