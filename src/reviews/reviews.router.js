@@ -4,15 +4,11 @@ const controller = require("./reviews.controller");
 const methodNotAllowed = require("../errors/methodNotAllowed"); 
 
 router
-  .route("/:dishId")
-  .get(controller.read)
-  .put(controller.update)
+  .route("/:review_id")
   .all(methodNotAllowed);
 
 router 
   .route("/")
-  .get(controller.list)
-  .post(controller.create)
   .all(methodNotAllowed);
 
 module.exports = router;
