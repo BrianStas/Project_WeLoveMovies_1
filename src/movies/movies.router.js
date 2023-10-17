@@ -3,6 +3,12 @@ const path = require("path");
 const controller = require("./movies.controller");
 const methodNotAllowed = require("../errors/methodNotAllowed"); 
 
+
+router
+  .route("/:movieId/reviews")
+  .get(controller.reviewsList)
+  .all(methodNotAllowed);
+
 router
     .route("/:movieId/theaters")
     .get(controller.theaterList)
