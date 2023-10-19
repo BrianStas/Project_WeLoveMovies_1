@@ -1,10 +1,11 @@
 const knex = require("../db/connection");
 
-
+// simple return of all movies to the controller
 function list() {
   return knex("movies").select("*");
 }
 
+//this returns only movies that are showing now, labelled "is_showing: true"
 function filteredList(){
     console.log("filteredList working")
     return knex("movies as m")
@@ -13,18 +14,19 @@ function filteredList(){
         .select("m.*")
         .where({"mt.is_showing": true})
 }
-
+// returns the first movie that matches the movie ID parameter.
+//this would normally return an array of one object, which is why we apply first();
 function read(movieId) {
     return knex("movies").select("*").where({ movie_id: movieId }).first();
 }
-
+//this returns all theaters that have the movieId being played
 function theatersPlayingMovie(movieId){
     return knex("theaters as t")
         .join("movies_theaters as mt", "t.theater_id", "mt.theater_id")
         .select("t.*")
         .where({"mt.movie_id": movieId})
 }
-
+//this returns all reviews for a particular movie with the format of Review data and nested Critic data
 function movieReviewData(movieId){
   return knex("reviews as r")
     .join("critics as c", "r.critic_id", "c.critic_id")

@@ -1,7 +1,8 @@
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const moviesService = require("./movies.service");
 
-
+//pulls a list of either all movies or just movies currently showing
+//this changes depending on the req query (?is_showing=true)
 function list(req, res, next) {
     const {is_showing}= req.query;
     console.log(is_showing)
@@ -17,11 +18,13 @@ function list(req, res, next) {
             .catch(next);
     }}
 
+    //this will give back the data for movie passed through movieExists
 function read(req, res) {
     const { movie: data } = res.locals;     
     res.json({ data });     
     }
 
+    //this uses the service to pull the theater list
 function theaterList(req, res, next){
     moviesService
     .theatersPlayingMovie(req.params.movieId)
@@ -29,6 +32,7 @@ function theaterList(req, res, next){
     .catch(next);
 }
 
+//this uses the service to pull all reviews for the movieId
 function reviewsList(req, res, next){
   moviesService
   .movieReviewData(req.params.movieId)
@@ -36,6 +40,7 @@ function reviewsList(req, res, next){
   .catch(next);
 }
 
+//middleware to check if the movieId matches something in the API
 function movieExists(req, res, next) {
     moviesService  
       .read(req.params.movieId)  
