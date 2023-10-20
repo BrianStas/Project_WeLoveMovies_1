@@ -3,6 +3,9 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const reviewsService = require("./reviews.service");
 
 
+// this function first sends off data to update and then calls
+//updateRead to return all information for the updated review
+//if you don't have that read portion, nothing will be returned
 function update(req, res, next){
     const updatedReview = {
         ...res.locals.review,
@@ -21,6 +24,7 @@ function update(req, res, next){
         .catch(next);
 }
 
+// simple call to delete a particular review via the Review ID
 function destroy(req, res, next) {
     reviewsService 
       .delete(res.locals.review.review_id)  
@@ -28,6 +32,9 @@ function destroy(req, res, next) {
       .catch(next);  
   }
 
+// checker for if a review exists
+//pulls the review ID from params, checks if that's in the reviews and returns error if not
+//if successful, sets the locals.review to equal the found review data
   function reviewExists(req, res, next) {
     reviewsService  
       .read(req.params.reviewId)  

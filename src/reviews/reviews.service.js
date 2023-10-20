@@ -1,10 +1,13 @@
 const knex = require("../db/connection");
 const mapProperties = require("../utils/map-properties");
 
+// simple delete function that matches review ID to param for deletion
 function destroy(review_id) {
     return knex("reviews").where({ review_id }).del();    
   }
 
+  // specialty function that helps map a nested object in the return for a review.
+  //here, the critic fields will be nested in the review fields under the property "critic"
   const addCritic = mapProperties({   
         critic_critic_id: "critic.critic_id",
         preferred_name: "critic.preferred_name",
@@ -14,6 +17,7 @@ function destroy(review_id) {
         critic_updated_at: "critic.updated_at"      
   })
 
+ // this is the update function, but nothing will be returned, so need to call updateRead as well
   function update(updatedReview){
     return knex("reviews")     
       .select("*")
@@ -21,6 +25,8 @@ function destroy(review_id) {
       .update(updatedReview, "*")
   }
 
+// this runs after the update to return the correct review information
+// note: it will return all review and critic fields, but then the critic gets mapped to a nested object
 function updateRead(reviewId){
     return knex("reviews as r")
     .join("critics as c", "c.critic_id", "r.critic_id")
@@ -30,6 +36,7 @@ function updateRead(reviewId){
     .then(addCritic)
 }
 
+// simple read function to return information on the given review ID
 function read(reviewId) {
     return knex("reviews").select("*").where({ review_id: reviewId }).first();
 }
